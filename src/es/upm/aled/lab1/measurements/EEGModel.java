@@ -32,7 +32,8 @@ public class EEGModel {
 	 * Builds an empty EEGModel.
 	 */
 	public EEGModel() {
-		
+		this.gui = gui;
+		this.measurements = measurements; 
 	}
 
 	/**
@@ -58,6 +59,13 @@ public class EEGModel {
 	 */
 	public EEGModel(Measurement[] measurements) {
 		// TODO
+		// try {
+	//		loadMeasurement(measurements);
+	//	} catch (IOException e) {
+			//System.out.println("Error reading from file. Is the format correct?");
+		//	e.printStackTrace();
+			// return;
+		//}
 		
 	}
 
@@ -132,6 +140,14 @@ public class EEGModel {
 	 */
 	public void saveFile(String fileName) throws IOException {
 		// TODO
+		File f = new File(fileName);
+		FileOutputStream fsal = new FileOutputStream(f);
+		PrintStream fpri = new PrintStream(fsal);
+		
+		
+		fsal.close();
+		fpri.close();
+		
 		
 	}
 
