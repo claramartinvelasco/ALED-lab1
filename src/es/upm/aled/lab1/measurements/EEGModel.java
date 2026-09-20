@@ -66,7 +66,7 @@ public class EEGModel {
 		//	e.printStackTrace();
 			// return;
 		//}
-		
+	// pendiente
 		
 	
 	}
