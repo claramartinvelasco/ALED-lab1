@@ -59,14 +59,11 @@ public class EEGModel {
 	 */
 	public EEGModel(Measurement[] measurements) {
 		// TODO
-		// try {
-	//		loadMeasurement(measurements);
-	//	} catch (IOException e) {
-			//System.out.println("Error reading from file. Is the format correct?");
-		//	e.printStackTrace();
-			// return;
-		//}
-	// pendiente
+		for (Measurement m: measurements)
+			this.addMeasurement(m);
+//		this.measurements.add(m); MEJOR LO DE ARRIBA PORQUE ABAJO HAY UN METODO CREADO PARA INTRODUCIR
+		
+
 		
 	
 	}
@@ -101,8 +98,7 @@ public class EEGModel {
 	 */
 	public EEGModel filter(Filter filter) {
 		// TODO
-		
-		return null;
+		return filter.applyFilter(this);
 	}
 
 	/**
@@ -142,15 +138,19 @@ public class EEGModel {
 	 */
 	public void saveFile(String fileName) throws IOException {
 		// TODO
-		File f = new File(fileName);
-		FileOutputStream fsal = new FileOutputStream(f);
-		PrintStream fpri = new PrintStream(fsal);
+		File file = new File(fileName);
+		FileOutputStream fileOutPutStream = new FileOutputStream(file);
+		PrintStream ps = new PrintStream(fileOutPutStream);
 		
+		int index = 0;
+		for (Measurement m: this.measurements) {
+			ps.print((index++)%256);
+			for (int i = 0; i<m.numChannels(); i++)
+				ps.print("," + m.getChannel(i));
+			ps.println();
+		}
 		
-		fsal.close();
-		fpri.close();
-		
-		
+		ps.close();
 	}
 
 	/**
@@ -267,13 +267,28 @@ public class EEGModel {
 	public static void main(String[] args) {
 		if (args.length > 0) {
 			EEGModel eeg = new EEGModel(args[0]);
+			
+			int min = 2750;
+			int max = 3750; 
+			int [] validChannels = {8,9,10};
+			
+			eeg = eeg.filter(new FilterExtractPeriod (min, max));
+			eeg = eeg.filter(new FilterExtractChannels(validChannels)); 
+			
+			
 			eeg.plotData();
 			// TODO
+			
 			
 		} else {
 			EEGModel eeg = new EEGModel();
 			eeg.createSyntheticData(1000);
 			// TODO
+			try {
+				eeg.saveFile("Synthetic.txt");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			
 		}
 	}
